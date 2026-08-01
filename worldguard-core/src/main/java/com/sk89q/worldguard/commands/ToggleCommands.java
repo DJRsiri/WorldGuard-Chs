@@ -50,58 +50,58 @@ public class ToggleCommands {
     }
 
     @Command(aliases = {"stopfire"}, usage = "[<world>]",
-            desc = "Disables all fire spread temporarily", max = 1)
+            desc = "临时禁止所有火焰蔓延", max = 1)
     @CommandPermissions({"worldguard.fire-toggle.stop"})
     public void stopFire(CommandContext args, Actor sender) throws CommandException {
-        
+
         World world;
-        
+
         if (args.argsLength() == 0) {
             world = worldGuard.checkPlayer(sender).getWorld();
         } else {
             world = worldGuard.getPlatform().getMatcher().matchWorld(sender, args.getString(0));
         }
-        
+
         WorldConfiguration wcfg = WorldGuard.getInstance().getPlatform().getGlobalStateManager().get(world);
 
         if (!wcfg.fireSpreadDisableToggle) {
             worldGuard.getPlatform().broadcastNotification(
-                    LabelFormat.wrap("Fire spread has been globally disabled for '" + world.getName() + "' by "
-                    + sender.getDisplayName() + "."));
+                    LabelFormat.wrap("火焰蔓延已由 " + sender.getDisplayName()
+                    + " 在世界 '" + world.getName() + "' 中全局禁用。"));
         } else {
-            sender.print("Fire spread was already globally disabled.");
+            sender.print("火焰蔓延此前已被全局禁用。");
         }
 
         wcfg.fireSpreadDisableToggle = true;
     }
 
     @Command(aliases = {"allowfire"}, usage = "[<world>]",
-            desc = "Allows all fire spread temporarily", max = 1)
+            desc = "临时允许所有火焰蔓延", max = 1)
     @CommandPermissions({"worldguard.fire-toggle.stop"})
     public void allowFire(CommandContext args, Actor sender) throws CommandException {
-        
+
         World world;
-        
+
         if (args.argsLength() == 0) {
             world = worldGuard.checkPlayer(sender).getWorld();
         } else {
             world = worldGuard.getPlatform().getMatcher().matchWorld(sender, args.getString(0));
         }
-        
+
         WorldConfiguration wcfg = WorldGuard.getInstance().getPlatform().getGlobalStateManager().get(world);
 
         if (wcfg.fireSpreadDisableToggle) {
-            worldGuard.getPlatform().broadcastNotification(LabelFormat.wrap("Fire spread has been globally for '" + world.getName() + "' re-enabled by "
-                    + sender.getDisplayName() + "."));
+            worldGuard.getPlatform().broadcastNotification(LabelFormat.wrap("火焰蔓延已由 " + sender.getDisplayName()
+                    + " 在世界 '" + world.getName() + "' 中重新启用。"));
         } else {
-            sender.print("Fire spread was already globally enabled.");
+            sender.print("火焰蔓延此前已被全局启用。");
         }
 
         wcfg.fireSpreadDisableToggle = false;
     }
 
     @Command(aliases = {"halt-activity", "stoplag", "haltactivity"}, usage = "[confirm]",
-            desc = "Attempts to cease as much activity in order to stop lag", flags = "cis", max = 1)
+            desc = "尝试停止尽可能多的活动以缓解卡顿", flags = "cis", max = 1)
     @CommandPermissions({"worldguard.halt-activity"})
     public void stopLag(CommandContext args, Actor sender) throws CommandException {
 
@@ -109,9 +109,9 @@ public class ToggleCommands {
 
         if (args.hasFlag('i')) {
             if (configManager.activityHaltToggle) {
-                 sender.print("ALL intensive server activity is not allowed.");
+                 sender.print("所有高消耗服务器活动已被禁止。");
             } else {
-                 sender.print("ALL intensive server activity is allowed.");
+                 sender.print("所有高消耗服务器活动已被允许。");
             }
         } else {
             boolean activityHaltToggle = !args.hasFlag('c');
@@ -120,18 +120,18 @@ public class ToggleCommands {
                 String confirmCommand = "/" + args.getCommand() + " confirm";
 
                 TextComponent message = TextComponent.builder("")
-                        .append(ErrorFormat.wrap("This command will "))
-                        .append(ErrorFormat.wrap("PERMANENTLY")
+                        .append(ErrorFormat.wrap("此命令将 "))
+                        .append(ErrorFormat.wrap("永久")
                                 .decoration(TextDecoration.BOLD, TextDecoration.State.TRUE))
-                        .append(ErrorFormat.wrap(" erase ALL animals in ALL loaded chunks in ALL loaded worlds. "))
+                        .append(ErrorFormat.wrap("清除所有已加载世界、所有已加载区块中的所有动物。 "))
                         .append(TextComponent.newline())
-                        .append(TextComponent.of("[Click]", TextColor.GREEN)
+                        .append(TextComponent.of("[点击]", TextColor.GREEN)
                                 .clickEvent(ClickEvent.of(ClickEvent.Action.RUN_COMMAND, confirmCommand))
-                                .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of("Click to confirm /" + args.getCommand()))))
-                        .append(ErrorFormat.wrap(" or type "))
+                                .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of("点击确认 /" + args.getCommand()))))
+                        .append(ErrorFormat.wrap(" 或输入 "))
                         .append(CodeFormat.wrap(confirmCommand)
                                 .clickEvent(ClickEvent.of(ClickEvent.Action.SUGGEST_COMMAND, confirmCommand)))
-                        .append(ErrorFormat.wrap(" to confirm."))
+                        .append(ErrorFormat.wrap(" 来确认。"))
                         .build();
 
                 sender.print(message);
@@ -142,13 +142,13 @@ public class ToggleCommands {
 
             if (activityHaltToggle) {
                 if (!(sender instanceof LocalPlayer)) {
-                    sender.print("ALL intensive server activity halted.");
+                    sender.print("所有高消耗服务器活动已停止。");
                 }
 
                 if (!args.hasFlag('s')) {
-                    worldGuard.getPlatform().broadcastNotification(LabelFormat.wrap("ALL intensive server activity halted by " + sender.getDisplayName() + "."));
+                    worldGuard.getPlatform().broadcastNotification(LabelFormat.wrap("所有高消耗服务器活动已由 " + sender.getDisplayName() + " 停止。"));
                 } else {
-                    sender.print("(Silent) ALL intensive server activity halted by " + sender.getDisplayName() + ".");
+                    sender.print("（静默）所有高消耗服务器活动已由 " + sender.getDisplayName() + " 停止。");
                 }
 
                 for (World world : WorldEdit.getInstance().getPlatformManager().queryCapability(Capability.GAME_HOOKS).getWorlds()) {
@@ -162,19 +162,19 @@ public class ToggleCommands {
                     }
 
                     if (removed > 10) {
-                        sender.printRaw("" + removed + " entities (>10) auto-removed from "
-                                + world.getName());
+                        sender.printRaw("" + removed + " 个实体（>10）已从 "
+                                + world.getName() + " 自动移除");
                     }
                 }
             } else {
                 if (!args.hasFlag('s')) {
-                    worldGuard.getPlatform().broadcastNotification(LabelFormat.wrap("ALL intensive server activity is now allowed."));
-                    
+                    worldGuard.getPlatform().broadcastNotification(LabelFormat.wrap("所有高消耗服务器活动现已允许。"));
+
                     if (!(sender instanceof LocalPlayer)) {
-                        sender.print("ALL intensive server activity is now allowed.");
+                        sender.print("所有高消耗服务器活动现已允许。");
                     }
                 } else {
-                    sender.print("(Silent) ALL intensive server activity is now allowed.");
+                    sender.print("（静默）所有高消耗服务器活动现已允许。");
                 }
             }
         }
