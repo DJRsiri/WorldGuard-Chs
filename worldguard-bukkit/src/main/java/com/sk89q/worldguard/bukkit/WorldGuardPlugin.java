@@ -419,15 +419,15 @@ public class WorldGuardPlugin extends JavaPlugin {
     public WorldEditPlugin getWorldEdit() throws CommandException {
         Plugin worldEdit = getServer().getPluginManager().getPlugin("WorldEdit");
         if (worldEdit == null) {
-            throw new CommandException("WorldEdit does not appear to be installed.");
+            throw new CommandException("WorldEdit 似乎尚未安装。");
         } else if (!worldEdit.isEnabled()) {
-            throw new CommandException("WorldEdit does not appear to be enabled.");
+            throw new CommandException("WorldEdit 似乎尚未启用。");
         }
 
         if (worldEdit instanceof WorldEditPlugin) {
             return (WorldEditPlugin) worldEdit;
         } else {
-            throw new CommandException("WorldEdit detection failed (report error).");
+            throw new CommandException("WorldEdit 检测失败（请报告此错误）。");
         }
     }
 

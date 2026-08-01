@@ -153,7 +153,7 @@ public final class Flags {
     @Deprecated
     public static final StringFlag TELE_MESSAGE = register(new StringFlag("teleport-message",
             LegacyComponentSerializer.INSTANCE.serialize(TextComponent.of("").append(TextComponent.of(
-                    "Teleported you to the region '%id%'.", TextColor.LIGHT_PURPLE)))));
+                    "已将你传送到区域 '%id%'。", TextColor.LIGHT_PURPLE)))));
 
     // idk?
     public static final StateFlag INVINCIBILITY = register(new StateFlag("invincible", false));
@@ -222,27 +222,27 @@ public final class Flags {
      */
     @Deprecated
     public static final StringFlag DENY_MESSAGE = register(new StringFlag("deny-message",
-            LegacyComponentSerializer.INSTANCE.serialize(TextComponent.of("").append(TextComponent.of("Hey!",
+            LegacyComponentSerializer.INSTANCE.serialize(TextComponent.of("").append(TextComponent.of("嘿！",
                     TextColor.RED, Sets.newHashSet(TextDecoration.BOLD)))
-                    .append(TextComponent.of(" Sorry, but you can't %what% here.", TextColor.GRAY)))));
+                    .append(TextComponent.of(" 抱歉，你不能在这里%what%。", TextColor.GRAY)))));
     /**
      * @deprecated The type of this flag will change from a StringFlag to a ComponentFlag to support JSON text
      *              in a future release. If you depend on the type of this flag, take proper precaution for future breakage.
      */
     @Deprecated
     public static final StringFlag ENTRY_DENY_MESSAGE = register(new StringFlag("entry-deny-message",
-            LegacyComponentSerializer.INSTANCE.serialize(TextComponent.of("").append(TextComponent.of("Hey!",
+            LegacyComponentSerializer.INSTANCE.serialize(TextComponent.of("").append(TextComponent.of("嘿！",
                     TextColor.RED, Sets.newHashSet(TextDecoration.BOLD)))
-                    .append(TextComponent.of(" You are not permitted to enter this area.", TextColor.GRAY)))));
+                    .append(TextComponent.of(" 你不被允许进入此区域。", TextColor.GRAY)))));
     /**
      * @deprecated The type of this flag will change from a StringFlag to a ComponentFlag to support JSON text
      *              in a future release. If you depend on the type of this flag, take proper precaution for future breakage.
      */
     @Deprecated
     public static final StringFlag EXIT_DENY_MESSAGE = register(new StringFlag("exit-deny-message",
-            LegacyComponentSerializer.INSTANCE.serialize(TextComponent.of("").append(TextComponent.of("Hey!",
+            LegacyComponentSerializer.INSTANCE.serialize(TextComponent.of("").append(TextComponent.of("嘿！",
                     TextColor.RED, Sets.newHashSet(TextDecoration.BOLD)))
-                    .append(TextComponent.of(" You are not permitted to leave this area.", TextColor.GRAY)))));
+                    .append(TextComponent.of(" 你不被允许离开此区域。", TextColor.GRAY)))));
 
     private Flags() {
     }
