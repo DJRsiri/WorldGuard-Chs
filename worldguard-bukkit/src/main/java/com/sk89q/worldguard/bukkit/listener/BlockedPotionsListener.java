@@ -94,8 +94,8 @@ public class BlockedPotionsListener extends AbstractListener {
                 if (getPlugin().hasPermission(player, "worldguard.override.potions")) {
                     return;
                 }
-                player.sendMessage(ChatColor.RED + "Sorry, arrows with "
-                        + blockedEffect.getName() + " are presently disabled.");
+                player.sendMessage(ChatColor.RED + "抱歉，带有 "
+                        + blockedEffect.getName() + " 效果的箭矢目前已被禁用。");
             }
             event.setCancelled(true);
         }
@@ -139,15 +139,15 @@ public class BlockedPotionsListener extends AbstractListener {
                     if (getPlugin().hasPermission(player, "worldguard.override.potions")) {
                         if (wcfg.blockPotionsAlways && (item.getType() == Material.SPLASH_POTION
                                 || item.getType() == Material.LINGERING_POTION)) {
-                            player.sendMessage(ChatColor.RED + "Sorry, potions with " +
-                                    blockedEffect.getName() + " can't be thrown, " +
-                                    "even if you have a permission to bypass it, " +
-                                    "due to limitations (and because overly-reliable potion blocking is on).");
+                            player.sendMessage(ChatColor.RED + "抱歉，带有 " +
+                                    blockedEffect.getName() + " 效果的药水无法投掷，" +
+                                    "即使你拥有绕过权限，" +
+                                    "因为存在限制（且已开启过于严格的药水拦截）。");
                             event.setCancelled(true);
                         }
                     } else {
-                        player.sendMessage(ChatColor.RED + "Sorry, potions with "
-                                + blockedEffect.getName() + " are presently disabled.");
+                        player.sendMessage(ChatColor.RED + "抱歉，带有 "
+                                + blockedEffect.getName() + " 效果的药水目前已被禁用。");
                         event.setCancelled(true);
                     }
                 } else {

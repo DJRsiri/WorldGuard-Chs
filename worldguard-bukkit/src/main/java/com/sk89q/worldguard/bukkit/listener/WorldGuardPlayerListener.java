@@ -252,7 +252,7 @@ public class WorldGuardPlayerListener extends AbstractListener {
                 ItemStack heldItem = player.getInventory().getItem(slot);
                 if (heldItem != null && heldItem.getAmount() < 0) {
                     player.getInventory().setItem(slot, null);
-                    player.sendMessage(ChatColor.RED + "Infinite stack in slot #" + slot + " removed.");
+                    player.sendMessage(ChatColor.RED + "槽位 #" + slot + " 中的无限堆叠已被移除。");
                 }
             }
         }
@@ -264,7 +264,7 @@ public class WorldGuardPlayerListener extends AbstractListener {
                 ApplicableRegionSet set = WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery()
                         .getApplicableRegions(BukkitAdapter.adapt(block.getLocation()), RegionQuery.QueryOption.SORT);
                 if (set.size() > 0) {
-                    player.sendMessage(ChatColor.YELLOW + "Can you build? " + (set.testState(localPlayer, Flags.BUILD) ? "Yes" : "No"));
+                    player.sendMessage(ChatColor.YELLOW + "你能建造吗？ " + (set.testState(localPlayer, Flags.BUILD) ? "能" : "不能"));
 
                     StringBuilder str = new StringBuilder();
                     for (Iterator<ProtectedRegion> it = set.iterator(); it.hasNext();) {
@@ -274,9 +274,9 @@ public class WorldGuardPlayerListener extends AbstractListener {
                         }
                     }
 
-                    localPlayer.print("Applicable regions: " + str);
+                    localPlayer.print("适用区域： " + str);
                 } else {
-                    localPlayer.print("WorldGuard: No defined regions here!");
+                    localPlayer.print("WorldGuard：此处没有已定义的区域！");
                 }
 
                 event.setUseItemInHand(Event.Result.DENY);

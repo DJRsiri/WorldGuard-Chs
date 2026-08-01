@@ -1,21 +1,17 @@
 #
-# WorldGuard's configuration file.
+# WorldGuard 的配置文件。
 #
-# This is the a per-world configuration file. It only affects one
-# corresponding world.
+# 这是一个按世界生效的配置文件。它只影响对应的一个世界。
 #
-# About editing this file:
-# - DO NOT USE TABS. You MUST use spaces or Bukkit will complain. If
-#   you use an editor like Notepad++ (recommended for Windows users), you
-#   must configure it to "replace tabs with spaces." In Notepad++, this can
-#   be changed in Settings > Preferences > Language Menu.
-# - Don't get rid of the indents. They are indented so some entries are
-#   in categories (like "enforce-single-session" is in the "protection"
-#   category.
-# - If you want to check the format of this file before putting it
-#   into WorldGuard, paste it into http://yaml-online-parser.appspot.com/
-#   and see if it gives "ERROR:".
-# - Lines starting with # are comments and so they are ignored.
+# 关于编辑此文件：
+# - 不要使用制表符（TAB）。你必须使用空格，否则 Bukkit 会报错。如果你
+#   使用像 Notepad++ 这样的编辑器（推荐 Windows 用户使用），你需要
+#   在 设置 > 首选项 > 语言 中配置 "将制表符替换为空格"。
+# - 不要删除缩进。缩进用于将某些条目归类（例如 "enforce-single-session"
+#   属于 "protection" 类别）。
+# - 如果你想在放入 WorldGuard 之前检查此文件的格式，请将其粘贴到
+#   http://yaml-online-parser.appspot.com/ 并查看是否给出 "ERROR:"。
+# - 以 # 开头的行是注释，会被忽略。
 #
 
-# -- This should be automatically replaced by the plugin in-game --
+# -- 此处应被插件在游戏内自动替换 --
