@@ -20,7 +20,9 @@
 package com.sk89q.worldguard.bukkit;
 
 import com.google.common.collect.ImmutableList;
+import com.sk89q.bukkit.util.CommandInspector;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
+import com.sk89q.bukkit.util.DynamicPluginCommand;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.minecraft.util.commands.CommandUsageException;
@@ -66,6 +68,7 @@ import com.sk89q.worldguard.bukkit.util.Entities;
 import com.sk89q.worldguard.bukkit.util.Events;
 import com.sk89q.worldguard.commands.GeneralCommands;
 import com.sk89q.worldguard.commands.ProtectionCommands;
+import com.sk89q.worldguard.commands.TabCompleteHandler;
 import com.sk89q.worldguard.commands.ToggleCommands;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.Flags;
@@ -88,6 +91,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -98,6 +102,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -106,7 +111,7 @@ import java.util.logging.Logger;
 /**
  * The main class for WorldGuard as a Bukkit plugin.
  */
-public class WorldGuardPlugin extends JavaPlugin {
+public class WorldGuardPlugin extends JavaPlugin implements TabCompleter {
 
     private static final org.apache.logging.log4j.Logger LOGGER = LogManagerCompat.getLogger();
     private static WorldGuardPlugin inst;
@@ -122,12 +127,51 @@ public class WorldGuardPlugin extends JavaPlugin {
      */
     public WorldGuardPlugin() {
         inst = this;
-        commands = new CommandsManager<Actor>() {
-            @Override
-            public boolean hasPermission(Actor player, String perm) {
-                return player.hasPermission(perm);
+        commands = new WGCommandManager();
+    }
+
+    /**
+     * WorldGuard 的命令管理器，同时实现 CommandInspector 以启用 DynamicPluginCommand
+     * 的 tab 补全（与 WorldEdit 的机制一致）。
+     */
+    private final class WGCommandManager extends CommandsManager<Actor> implements CommandInspector {
+
+        @Override
+        public boolean hasPermission(Actor player, String perm) {
+            return player.hasPermission(perm);
+        }
+
+        @Override
+        public String getShortText(Command command) {
+            return command.getUsage() + " - " + command.getDescription();
+        }
+
+        @Override
+        public String getFullText(Command command) {
+            return getShortText(command);
+        }
+
+        @Override
+        public boolean testPermission(CommandSender sender, Command command) {
+            // 复刻 DynamicPluginCommand.testPermissionSilent 中 CommandsManager 分支的原逻辑。
+            // testPermission 仅由 DynamicPluginCommand.testPermissionSilent 调用，传入的
+            // command 必为该命令自身，故可直接转型；getPermissions() 为 DynamicPluginCommand
+            // 声明的权限数组（基类 Command 无此方法）。
+            DynamicPluginCommand dynamicCommand = (DynamicPluginCommand) command;
+            if (dynamicCommand.getPermissions() == null || dynamicCommand.getPermissions().length == 0) {
+                return true;
             }
-        };
+            Actor actor = wrapCommandSender(sender);
+            if (actor == null) {
+                return false;
+            }
+            for (String perm : dynamicCommand.getPermissions()) {
+                if (hasPermission(actor, perm)) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     /**
@@ -335,6 +379,15 @@ public class WorldGuardPlugin extends JavaPlugin {
         }
 
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        Actor actor = wrapCommandSender(sender);
+        if (actor == null) {
+            return ImmutableList.of();
+        }
+        return TabCompleteHandler.complete(alias, args, actor, new BukkitTabCompletionProvider());
     }
 
     /**
