@@ -224,7 +224,7 @@ public final class Flags {
     public static final StringFlag DENY_MESSAGE = register(new StringFlag("deny-message",
             LegacyComponentSerializer.INSTANCE.serialize(TextComponent.of("").append(TextComponent.of("Hey!",
                     TextColor.RED, Sets.newHashSet(TextDecoration.BOLD)))
-                    .append(TextComponent.of(" 抱歉，你不能在这里%what%。", TextColor.GRAY)))));
+                    .append(TextComponent.of(" 抱歉，你不能在这里 %what%。", TextColor.YELLOW)))));
     /**
      * @deprecated The type of this flag will change from a StringFlag to a ComponentFlag to support JSON text
      *              in a future release. If you depend on the type of this flag, take proper precaution for future breakage.
@@ -233,7 +233,7 @@ public final class Flags {
     public static final StringFlag ENTRY_DENY_MESSAGE = register(new StringFlag("entry-deny-message",
             LegacyComponentSerializer.INSTANCE.serialize(TextComponent.of("").append(TextComponent.of("Hey!",
                     TextColor.RED, Sets.newHashSet(TextDecoration.BOLD)))
-                    .append(TextComponent.of(" 你不被允许进入此区域。", TextColor.GRAY)))));
+                    .append(TextComponent.of(" 你不被允许进入此区域。", TextColor.YELLOW)))));
     /**
      * @deprecated The type of this flag will change from a StringFlag to a ComponentFlag to support JSON text
      *              in a future release. If you depend on the type of this flag, take proper precaution for future breakage.
@@ -242,7 +242,7 @@ public final class Flags {
     public static final StringFlag EXIT_DENY_MESSAGE = register(new StringFlag("exit-deny-message",
             LegacyComponentSerializer.INSTANCE.serialize(TextComponent.of("").append(TextComponent.of("Hey!",
                     TextColor.RED, Sets.newHashSet(TextDecoration.BOLD)))
-                    .append(TextComponent.of(" 你不被允许离开此区域。", TextColor.GRAY)))));
+                    .append(TextComponent.of(" 你不被允许离开此区域。", TextColor.YELLOW)))));
 
     private Flags() {
     }
