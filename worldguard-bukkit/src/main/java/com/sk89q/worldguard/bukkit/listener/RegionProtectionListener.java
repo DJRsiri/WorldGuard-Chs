@@ -185,7 +185,7 @@ public class RegionProtectionListener extends AbstractListener {
                 if (fire) flags.add(Flags.FIRE_SPREAD);
                 if (lava) flags.add(Flags.LAVA_FIRE);
                 canPlace = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, flags.toArray(new StateFlag[flags.size()])));
-                what = "放置火";
+                what = "点火";
 
             } else if (type == Material.FROSTED_ICE) {
                 event.setSilent(true); // gets spammy
@@ -194,7 +194,7 @@ public class RegionProtectionListener extends AbstractListener {
             /* Everything else */
             } else {
                 canPlace = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.BLOCK_PLACE));
-                what = "放置该方块";
+                what = "放置方块";
             }
 
             if (!canPlace) {
@@ -224,7 +224,7 @@ public class RegionProtectionListener extends AbstractListener {
                 /* TNT */
                 if (event.getCause().find(EntityType.TNT, EntityType.TNT_MINECART) != null) {
                     canBreak = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.BLOCK_BREAK, Flags.TNT));
-                    what = "使用炸药";
+                    what = "使用TNT";
 
                 /* Everything else */
                 } else {
@@ -259,22 +259,22 @@ public class RegionProtectionListener extends AbstractListener {
             /* Saplings, etc. */
             if (Materials.isConsideredBuildingIfUsed(type)) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event));
-                what = "使用那个";
+                what = "用这个";
 
             /* Inventory */
             } else if (Materials.isInventoryBlock(type)) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.CHEST_ACCESS));
-                what = "打开那个";
+                what = "打开这个";
 
             /* Inventory for blocks with the possibility to be only use, e.g. lectern */
             } else if (handleAsInventoryUsage(event.getOriginalEvent())) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.CHEST_ACCESS));
-                what = "拿走那个";
+                what = "拿走这个";
 
             /* Anvils */
             } else if (Materials.isAnvil(type)) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.USE_ANVIL));
-                what = "使用那个";
+                what = "用这个";
 
             /* Beds */
             } else if (Materials.isBed(type)) {
@@ -294,12 +294,12 @@ public class RegionProtectionListener extends AbstractListener {
             /* Legacy USE flag */
             } else if (Materials.isUseFlagApplicable(type)) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.INTERACT, Flags.USE));
-                what = "使用那个";
+                what = "用这个";
 
             /* Everything else */
             } else {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.INTERACT));
-                what = "使用那个";
+                what = "用这个";
             }
 
             if (!canUse) {
@@ -412,7 +412,7 @@ public class RegionProtectionListener extends AbstractListener {
         if (Entities.isHostile(entity) || Entities.isAmbient(entity)
                 || entity instanceof Player || Entities.isNPC(entity)) {
             canUse = event.getRelevantFlags().isEmpty() || query.queryState(BukkitAdapter.adapt(target), associable, combine(event)) != State.DENY;
-            what = "使用那个";
+            what = "用这个";
         /* Paintings, item frames, etc. */
         } else if (Entities.isConsideredBuildingIfUsed(entity)
                 // weird case since sneak+interact is chest access and not ride
@@ -421,29 +421,29 @@ public class RegionProtectionListener extends AbstractListener {
                     && event.getCause().getFirstPlayer() != null
                     && ((ItemFrame) entity).getItem().getType() != Material.AIR) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.ITEM_FRAME_ROTATE));
-                what = "改变那个";
+                what = "改变这个";
             } else if (event.getOriginalEvent() instanceof InventoryOpenEvent || event.getOriginalEvent() instanceof InventoryMoveItemEvent) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.CHEST_ACCESS));
-                what = "打开那个";
+                what = "打开这个";
             } else {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event));
-                what = "改变那个";
+                what = "改变这个";
             }
         /* Ridden on use */
         } else if (Entities.isRiddenOnUse(entity)) {
             if (event.getOriginalEvent() instanceof PlayerLeashEntityEvent) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event));
-                what = "使用那个";
+                what = "用这个";
             } else {
                 // this is bypassed here as it's handled by the entity mount listener below
                 // bukkit actually gives three events in this case - in order: PlayerInteractAtEntity, VehicleEnter, EntityMount
                 canUse = true;
-                what = "骑乘那个";
+                what = "骑乘这个";
             }
         /* Everything else */
         } else {
             canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.INTERACT));
-            what = "使用那个";
+            what = "用这个";
         }
 
         if (!canUse) {
@@ -477,14 +477,14 @@ public class RegionProtectionListener extends AbstractListener {
         /* Hostile / ambient mob override */
         if (Entities.isHostile(event.getEntity()) || Entities.isAmbient(event.getEntity())) {
             canDamage = event.getRelevantFlags().isEmpty() || query.queryState(target, associable, combine(event)) != State.DENY;
-            what = "攻击那个";
+            what = "攻击这个";
         } else if (Entities.isVehicle(event.getEntity().getType())) {
             canDamage = query.testBuild(target, associable, combine(event, Flags.DESTROY_VEHICLE));
-            what = "改变那个";
+            what = "改变这个";
         /* Paintings, item frames, etc. */
         } else if (Entities.isConsideredBuildingIfUsed(event.getEntity())) {
             canDamage = query.testBuild(target, associable, combine(event));
-            what = "改变那个";
+            what = "改变这个";
 
         /* PVP */
         } else if (pvp) {
@@ -510,17 +510,17 @@ public class RegionProtectionListener extends AbstractListener {
         /* Player damage not caused  by another player */
         } else if (event.getEntity() instanceof Player) {
             canDamage = event.getRelevantFlags().isEmpty() || query.queryState(target, associable, combine(event)) != State.DENY;
-            what = "伤害那个";
+            what = "伤害这个";
 
         /* damage to non-hostile mobs (e.g. animals) */
         } else if (Entities.isNonHostile(event.getEntity())) {
             canDamage = query.testBuild(target, associable, combine(event, Flags.DAMAGE_ANIMALS));
-            what = "伤害那个";
+            what = "伤害这个";
 
         /* Everything else */
         } else {
             canDamage = query.testBuild(target, associable, combine(event, Flags.INTERACT));
-            what = "攻击那个";
+            what = "攻击这个";
         }
 
         if (!canDamage) {
@@ -546,7 +546,7 @@ public class RegionProtectionListener extends AbstractListener {
         if (!query.testBuild(BukkitAdapter.adapt(location), localPlayer, Flags.RIDE, Flags.INTERACT)) {
             event.setCancelled(true);
             DelegateEvent dummy = new UseEntityEvent(event, cause, vehicle);
-            tellErrorMessage(dummy, cause, vehicle.getLocation(), "骑乘那个");
+            tellErrorMessage(dummy, cause, vehicle.getLocation(), "骑乘这个");
         }
     }
 
